@@ -12,17 +12,42 @@ namespace FluentNHibernate.Diagnostics
             var sb = new StringBuilder();
 
             Title(sb, "Fluent Mappings");
+            
+            sb.AppendLine();
+            sb.AppendLine("Sources scanned:");
+            sb.AppendLine();
+
+            if (results.ScannedSources.Any())
+            {
+                var sources = results.ScannedSources
+                    .OrderBy(x => x)
+                    .ToArray();
+
+                List(sb, sources);
+            }
+            else
+            {
+                sb.AppendLine("  None found");
+            }
+
             sb.AppendLine();
             sb.AppendLine("Types discovered:");
             sb.AppendLine();
 
-            var fluentMappings = results.FluentMappings
-                .OrderBy(x => x.Name)
-                .ToArray();
+            if (results.FluentMappings.Any())
+            {
+                var fluentMappings = results.FluentMappings
+                    .OrderBy(x => x.Name)
+                    .ToArray();
 
-            Table(sb,
-                fluentMappings.Select(x => x.Name),
-                fluentMappings.Select(x => x.AssemblyQualifiedName));
+                Table(sb,
+                    fluentMappings.Select(x => x.Name),
+                    fluentMappings.Select(x => x.AssemblyQualifiedName));
+            }
+            else
+            {
+                sb.AppendLine("  None found");
+            }
 
             return sb.ToString();
         }
@@ -50,6 +75,12 @@ namespace FluentNHibernate.Diagnostics
                 sb.Length -= 3; // remove last separator
                 sb.AppendLine();
             }
+        }
+
+        void List(StringBuilder sb, IEnumerable<string> items)
+        {
+            foreach (var item in items)
+                sb.AppendLine("  " + item);
         }
 
         void Title(StringBuilder sb, string title)

@@ -52,6 +52,26 @@ namespace FluentNHibernate.Testing.Diagnostics
             result.FluentMappings.ShouldContain(typeof(SomeClassMap));
         }
 
+        [Test]
+        public void should_add_scanned_fluent_mapping_sources_to_result()
+        {
+            var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
+            var logger = new DefaultDiagnosticLogger(despatcher);
+
+            logger.LoadedFluentMappingsFromSource(new StubTypeSource());
+            logger.Flush();
+
+            DiagnosticResults result = null;
+            despatcher.AssertWasCalled(x => x.Publish(Arg<DiagnosticResults>.Is.Anything),
+                c => c.Callback<DiagnosticResults>(x =>
+                {
+                    result = x;
+                    return true;
+                }));
+
+            result.ScannedSources.ShouldContain("StubTypeSource");
+        }
+
         class SomeClassMap : ClassMap<SomeClass> { }
         class SomeClass {}
     }

@@ -35,6 +35,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_register_each_ComponentMap_type_and_return_them_in_the_results = () =>
             results.FluentMappings.ShouldContain(typeof(CompMap));
 
+        It should_return_the_source_in_the_results = () =>
+            results.ScannedSources.ShouldContainOnly("StubTypeSource");
+
         It should_not_register_non_fluent_mapping_types = () =>
             results.FluentMappings.ShouldNotContain(typeof(First));
         

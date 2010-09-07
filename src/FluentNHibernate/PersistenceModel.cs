@@ -79,6 +79,8 @@ namespace FluentNHibernate
                             IsMappingOf<IExternalComponentMappingProvider>(x) ||
                             IsMappingOf<IFilterDefinition>(x))
                 .Each(Add);
+
+            log.LoadedFluentMappingsFromSource(source);
         }
 
         private static Assembly FindTheCallingAssembly()

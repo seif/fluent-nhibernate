@@ -6,5 +6,6 @@ namespace FluentNHibernate.Diagnostics
     {
         void Flush();
         void FluentMappingDiscovered(Type type);
+        void LoadedFluentMappingsFromSource(ITypeSource source);
     }
 }

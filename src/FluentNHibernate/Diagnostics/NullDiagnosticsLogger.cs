@@ -9,5 +9,8 @@ namespace FluentNHibernate.Diagnostics
 
         public void FluentMappingDiscovered(Type type)
         {}
+
+        public void LoadedFluentMappingsFromSource(ITypeSource source)
+        {}
     }
 }
