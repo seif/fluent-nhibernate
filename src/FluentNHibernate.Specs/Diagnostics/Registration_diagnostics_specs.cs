@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using FluentNHibernate.Conventions;
 using FluentNHibernate.Diagnostics;
 using FluentNHibernate.Mapping;
 using FluentNHibernate.Specs.Automapping.Fixtures;
@@ -36,11 +38,50 @@ namespace FluentNHibernate.Specs.Diagnostics
             results.FluentMappings.ShouldContain(typeof(CompMap));
 
         It should_return_the_source_in_the_results = () =>
-            results.ScannedSources.ShouldContainOnly("StubTypeSource");
+            results.ScannedSources
+                .Where(x => x.Phase == ScanPhase.FluentMappings)
+                .Select(x => x.Identifier)
+                .ShouldContainOnly("StubTypeSource");
 
         It should_not_register_non_fluent_mapping_types = () =>
             results.FluentMappings.ShouldNotContain(typeof(First));
         
+        static FluentNHibernate.PersistenceModel model;
+        static DiagnosticResults results;
+    }
+
+    public class when_registering_conventions_with_diagnostics_enabled
+    {
+        Establish context = () =>
+        {
+            var despatcher = new DefaultDiagnosticMessageDespatcher();
+            despatcher.RegisterListener(new StubListener(x => results = x));
+
+            model = new FluentNHibernate.PersistenceModel();
+            model.SetLogger(new DefaultDiagnosticLogger(despatcher));
+        };
+
+        Because of = () =>
+        {
+            model.Conventions.AddSource(new StubTypeSource(typeof(ConventionA), typeof(ConventionB), typeof(NotAConvention)));
+            model.BuildMappings();
+        };
+
+        It should_produce_results_when_enabled = () =>
+            results.ShouldNotBeNull();
+
+        It should_register_each_convention_type_and_return_them_in_the_results = () =>
+            results.Conventions.ShouldContain(typeof(ConventionA), typeof(ConventionB));
+
+        It should_return_the_source_in_the_results = () =>
+            results.ScannedSources
+                .Where(x => x.Phase == ScanPhase.Conventions)
+                .Select(x => x.Identifier)
+                .ShouldContainOnly("StubTypeSource");
+
+        It should_not_register_non_convention_types = () =>
+            results.Conventions.ShouldNotContain(typeof(NotAConvention));
+
         static FluentNHibernate.PersistenceModel model;
         static DiagnosticResults results;
     }
@@ -76,6 +117,9 @@ namespace FluentNHibernate.Specs.Diagnostics
 
     class CompMap : ComponentMap<Comp> {}
     class Comp {}
+    class ConventionA : IConvention {}
+    class ConventionB : IConvention {}
+    class NotAConvention {}
 
     class StubListener : IDiagnosticListener
     {

@@ -1,4 +1,6 @@
-﻿using FluentNHibernate.Diagnostics;
+﻿using System.Linq;
+using FluentNHibernate.Conventions;
+using FluentNHibernate.Diagnostics;
 using FluentNHibernate.Mapping;
 using FluentNHibernate.Testing.Utils;
 using NUnit.Framework;
@@ -53,6 +55,26 @@ namespace FluentNHibernate.Testing.Diagnostics
         }
 
         [Test]
+        public void should_add_conventions_to_result()
+        {
+            var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
+            var logger = new DefaultDiagnosticLogger(despatcher);
+
+            logger.ConventionDiscovered(typeof(SomeConvention));
+            logger.Flush();
+
+            DiagnosticResults result = null;
+            despatcher.AssertWasCalled(x => x.Publish(Arg<DiagnosticResults>.Is.Anything),
+                c => c.Callback<DiagnosticResults>(x =>
+                {
+                    result = x;
+                    return true;
+                }));
+
+            result.Conventions.ShouldContain(typeof(SomeConvention));
+        }
+
+        [Test]
         public void should_add_scanned_fluent_mapping_sources_to_result()
         {
             var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
@@ -69,10 +91,37 @@ namespace FluentNHibernate.Testing.Diagnostics
                     return true;
                 }));
 
-            result.ScannedSources.ShouldContain("StubTypeSource");
+            result.ScannedSources
+                .Where(x => x.Phase == ScanPhase.FluentMappings)
+                .Select(x => x.Identifier)
+                .ShouldContain("StubTypeSource");
+        }
+
+        [Test]
+        public void should_add_scanned_convention_sources_to_result()
+        {
+            var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
+            var logger = new DefaultDiagnosticLogger(despatcher);
+
+            logger.LoadedConventionsFromSource(new StubTypeSource());
+            logger.Flush();
+
+            DiagnosticResults result = null;
+            despatcher.AssertWasCalled(x => x.Publish(Arg<DiagnosticResults>.Is.Anything),
+                c => c.Callback<DiagnosticResults>(x =>
+                {
+                    result = x;
+                    return true;
+                }));
+
+            result.ScannedSources
+                .Where(x => x.Phase == ScanPhase.Conventions)
+                .Select(x => x.Identifier)
+                .ShouldContain("StubTypeSource");
         }
 
         class SomeClassMap : ClassMap<SomeClass> { }
         class SomeClass {}
+        class SomeConvention : IConvention {}
     }
 }

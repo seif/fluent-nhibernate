@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Diagnostics;
+﻿using System;
+using FluentNHibernate.Diagnostics;
 using NUnit.Framework;
 
 namespace FluentNHibernate.Testing.Diagnostics
@@ -10,9 +11,21 @@ namespace FluentNHibernate.Testing.Diagnostics
         public void should_produce_simple_format()
         {
             var formatter = new DefaultOutputFormatter();
-            var results = new DiagnosticResults(
-                new[] {typeof(Two), typeof(One)},
-                new [] { typeof(One).Assembly.GetName().FullName });
+            var results = new DiagnosticResults(new[]
+                {
+                    new ScannedSource
+                    {
+                        Identifier = typeof(One).Assembly.GetName().FullName,
+                        Phase = ScanPhase.FluentMappings
+                    },
+                    new ScannedSource
+                    {
+                        Identifier = typeof(One).Assembly.GetName().FullName,
+                        Phase = ScanPhase.Conventions
+                    }
+                },
+                new[] { typeof(Two), typeof(One) },
+                new[] { typeof(Two), typeof(One) });
             var output = formatter.Format(results);
 
             output.ShouldEqual(
@@ -23,7 +36,17 @@ namespace FluentNHibernate.Testing.Diagnostics
                 "\r\n" +
                 "Types discovered:\r\n\r\n" +
                 "  " + typeof(One).Name + " | " + typeof(One).AssemblyQualifiedName + "\r\n" +
-                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n");
+                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n" +
+                "\r\n" +
+                "Conventions\r\n" +
+                "-----------\r\n\r\n" +
+                "Sources scanned:\r\n\r\n" +
+                "  " + typeof(One).Assembly.GetName().FullName + "\r\n" +
+                "\r\n" +
+                "Types discovered:\r\n\r\n" +
+                "  " + typeof(One).Name + " | " + typeof(One).AssemblyQualifiedName + "\r\n" +
+                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n"
+            );
         }
 
         class One { }

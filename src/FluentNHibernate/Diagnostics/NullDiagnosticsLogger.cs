@@ -10,7 +10,13 @@ namespace FluentNHibernate.Diagnostics
         public void FluentMappingDiscovered(Type type)
         {}
 
+        public void ConventionDiscovered(Type type)
+        {}
+
         public void LoadedFluentMappingsFromSource(ITypeSource source)
+        {}
+
+        public void LoadedConventionsFromSource(ITypeSource source)
         {}
     }
 }

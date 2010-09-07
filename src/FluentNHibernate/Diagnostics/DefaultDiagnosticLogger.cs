@@ -6,8 +6,9 @@ namespace FluentNHibernate.Diagnostics
     public class DefaultDiagnosticLogger : IDiagnosticLogger
     {
         readonly IDiagnosticMessageDespatcher despatcher;
+        readonly List<ScannedSource> scannedSources = new List<ScannedSource>();
         readonly List<Type> classMaps = new List<Type>();
-        readonly List<string> scannedSources = new List<string>();
+        readonly List<Type> conventions = new List<Type>();
         bool isDirty;
 
         public DefaultDiagnosticLogger(IDiagnosticMessageDespatcher despatcher)
@@ -26,7 +27,7 @@ namespace FluentNHibernate.Diagnostics
 
         DiagnosticResults BuildResults()
         {
-            return new DiagnosticResults(classMaps, scannedSources);
+            return new DiagnosticResults(scannedSources, classMaps, conventions);
         }
 
         public void FluentMappingDiscovered(Type type)
@@ -35,10 +36,30 @@ namespace FluentNHibernate.Diagnostics
             classMaps.Add(type);
         }
 
+        public void ConventionDiscovered(Type type)
+        {
+            isDirty = true;
+            conventions.Add(type);
+        }
+
         public void LoadedFluentMappingsFromSource(ITypeSource source)
         {
             isDirty = true;
-            scannedSources.Add(source.GetIdentifier());
+            scannedSources.Add(new ScannedSource
+            {
+                Identifier = source.GetIdentifier(),
+                Phase = ScanPhase.FluentMappings
+            });
+        }
+
+        public void LoadedConventionsFromSource(ITypeSource source)
+        {
+            isDirty = true;
+            scannedSources.Add(new ScannedSource
+            {
+                Identifier = source.GetIdentifier(),
+                Phase = ScanPhase.Conventions
+            });
         }
     }
 }

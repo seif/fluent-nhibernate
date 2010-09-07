@@ -11,45 +11,99 @@ namespace FluentNHibernate.Diagnostics
         {
             var sb = new StringBuilder();
 
+            OutputFluentMappings(sb, results);
+
+            sb.AppendLine();
+
+            OutputConventions(sb, results);
+
+            return sb.ToString();
+        }
+
+        void OutputConventions(StringBuilder sb, DiagnosticResults results)
+        {
+            Title(sb, "Conventions");
+
+            sb.AppendLine();
+            sb.AppendLine("Sources scanned:");
+            sb.AppendLine();
+
+            var sources = results.ScannedSources
+                    .Where(x => x.Phase == ScanPhase.Conventions)
+                    .OrderBy(x => x.Identifier)
+                    .Select(x => x.Identifier)
+                    .ToArray();
+
+            if (sources.Any())
+            {
+                List(sb, sources);
+
+                sb.AppendLine();
+                sb.AppendLine("Types discovered:");
+                sb.AppendLine();
+
+                if (results.Conventions.Any())
+                {
+                    var conventions = results.Conventions
+                        .OrderBy(x => x.Name)
+                        .ToArray();
+
+                    Table(sb,
+                        conventions.Select(x => x.Name),
+                        conventions.Select(x => x.AssemblyQualifiedName));
+                }
+                else
+                {
+                    sb.AppendLine("  None found");
+                }
+            }
+            else
+            {
+                sb.AppendLine("  None found");
+            }
+        }
+
+        void OutputFluentMappings(StringBuilder sb, DiagnosticResults results)
+        {
             Title(sb, "Fluent Mappings");
             
             sb.AppendLine();
             sb.AppendLine("Sources scanned:");
             sb.AppendLine();
 
-            if (results.ScannedSources.Any())
-            {
-                var sources = results.ScannedSources
-                    .OrderBy(x => x)
+            var sources = results.ScannedSources
+                    .Where(x => x.Phase == ScanPhase.FluentMappings)
+                    .OrderBy(x => x.Identifier)
+                    .Select(x => x.Identifier)
                     .ToArray();
 
+            if (sources.Any())
+            {
                 List(sb, sources);
+
+                sb.AppendLine();
+                sb.AppendLine("Types discovered:");
+                sb.AppendLine();
+
+                if (results.FluentMappings.Any())
+                {
+                    var fluentMappings = results.FluentMappings
+                        .OrderBy(x => x.Name)
+                        .ToArray();
+
+                    Table(sb,
+                        fluentMappings.Select(x => x.Name),
+                        fluentMappings.Select(x => x.AssemblyQualifiedName));
+                }
+                else
+                {
+                    sb.AppendLine("  None found");
+                }
             }
             else
             {
                 sb.AppendLine("  None found");
             }
-
-            sb.AppendLine();
-            sb.AppendLine("Types discovered:");
-            sb.AppendLine();
-
-            if (results.FluentMappings.Any())
-            {
-                var fluentMappings = results.FluentMappings
-                    .OrderBy(x => x.Name)
-                    .ToArray();
-
-                Table(sb,
-                    fluentMappings.Select(x => x.Name),
-                    fluentMappings.Select(x => x.AssemblyQualifiedName));
-            }
-            else
-            {
-                sb.AppendLine("  None found");
-            }
-
-            return sb.ToString();
         }
 
         void Table(StringBuilder sb, params IEnumerable<string>[] columns)

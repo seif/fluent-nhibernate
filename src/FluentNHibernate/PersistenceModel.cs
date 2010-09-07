@@ -58,6 +58,7 @@ namespace FluentNHibernate
         public void SetLogger(IDiagnosticLogger logger)
         {
             log = logger;
+            Conventions.SetLogger(logger);
         }
 
         protected void AddMappingsFromThisAssembly()
