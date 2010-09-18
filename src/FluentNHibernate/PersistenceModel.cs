@@ -34,7 +34,7 @@ namespace FluentNHibernate
         public PairBiDirectionalManyToManySidesDelegate BiDirectionalManyToManyPairer { get; set; }
 
         IDiagnosticMessageDespatcher diagnosticDespatcher = new DefaultDiagnosticMessageDespatcher();
-        IDiagnosticLogger log = new NullDiagnosticsLogger();
+        protected IDiagnosticLogger log = new NullDiagnosticsLogger();
 
         public PersistenceModel(IConventionFinder conventionFinder)
         {

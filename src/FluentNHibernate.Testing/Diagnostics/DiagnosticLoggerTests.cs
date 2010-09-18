@@ -120,6 +120,31 @@ namespace FluentNHibernate.Testing.Diagnostics
                 .ShouldContain("StubTypeSource");
         }
 
+        [Test]
+        public void should_skipped_automap_types_to_result()
+        {
+            var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
+            var logger = new DefaultDiagnosticLogger(despatcher);
+
+            logger.AutomappingSkippedType(typeof(object), "reason");
+            logger.Flush();
+
+            DiagnosticResults result = null;
+            despatcher.AssertWasCalled(x => x.Publish(Arg<DiagnosticResults>.Is.Anything),
+                c => c.Callback<DiagnosticResults>(x =>
+                {
+                    result = x;
+                    return true;
+                }));
+
+            result.AutomappingSkippedTypes
+                .ShouldContain(new SkippedAutomappingType
+                {
+                    Type = typeof(object),
+                    Reason = "reason"
+                });
+        }
+
         class SomeClassMap : ClassMap<SomeClass> { }
         class SomeClass {}
         class SomeConvention : IConvention {}

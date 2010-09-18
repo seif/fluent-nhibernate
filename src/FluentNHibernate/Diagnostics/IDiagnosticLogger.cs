@@ -9,5 +9,6 @@ namespace FluentNHibernate.Diagnostics
         void ConventionDiscovered(Type type);
         void LoadedFluentMappingsFromSource(ITypeSource source);
         void LoadedConventionsFromSource(ITypeSource source);
+        void AutomappingSkippedType(Type type, string reason);
     }
 }

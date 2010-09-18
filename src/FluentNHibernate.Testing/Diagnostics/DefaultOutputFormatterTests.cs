@@ -25,7 +25,20 @@ namespace FluentNHibernate.Testing.Diagnostics
                     }
                 },
                 new[] { typeof(Two), typeof(One) },
-                new[] { typeof(Two), typeof(One) });
+                new[] { typeof(Two), typeof(One) },
+                new[]
+                {
+                    new SkippedAutomappingType
+                    {
+                        Type = typeof(One),
+                        Reason = "first reason"
+                    },
+                    new SkippedAutomappingType
+                    {
+                        Type = typeof(Two),
+                        Reason = "second reason"
+                    },
+                });
             var output = formatter.Format(results);
 
             output.ShouldEqual(
@@ -45,7 +58,13 @@ namespace FluentNHibernate.Testing.Diagnostics
                 "\r\n" +
                 "Types discovered:\r\n\r\n" +
                 "  " + typeof(One).Name + " | " + typeof(One).AssemblyQualifiedName + "\r\n" +
-                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n"
+                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n" +
+                "\r\n" +
+                "Automapping\r\n" +
+                "-----------\r\n\r\n" +
+                "Skipped types:\r\n\r\n" + 
+                "  " + typeof(One).Name + " | first reason  | " + typeof(One).AssemblyQualifiedName + "\r\n" +
+                "  " + typeof(Two).Name + " | second reason | " + typeof(Two).AssemblyQualifiedName + "\r\n"
             );
         }
 

@@ -121,6 +121,7 @@
     <Compile Include="Diagnostics\NullDiagnosticsLogger.cs" />
     <Compile Include="Diagnostics\ScannedSource.cs" />
     <Compile Include="Diagnostics\ScanPhase.cs" />
+    <Compile Include="Diagnostics\SkippedAutomappingType.cs" />
     <Compile Include="Diagnostics\StringLambdaOutputListener.cs" />
     <Compile Include="ITypeSource.cs" />
     <Compile Include="Automapping\PrivateAutoPersistenceModel.cs" />

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using FluentNHibernate.Automapping.Alterations;
 using FluentNHibernate.Cfg;
-using FluentNHibernate.Diagnostics;
 using FluentNHibernate.Mapping;
 using FluentNHibernate.MappingModel;
 
@@ -122,16 +121,22 @@ namespace FluentNHibernate.Automapping
 
             var types = sources
                 .SelectMany(x => x.GetTypes())
-                .OrderBy(x => InheritanceHierarchyDepth(x));
+                .OrderBy(InheritanceHierarchyDepth);
 
             foreach (var type in types)
             {
                 // skipped by user-defined configuration criteria
                 if (!cfg.ShouldMap(type))
+                {
+                    log.AutomappingSkippedType(type, "Skipped by result of IAutomappingConfiguration.ShouldMap(Type)");
                     continue;
+                }
                 // skipped by inline where clause
                 if (whereClause != null && !whereClause(type))
+                {
+                    log.AutomappingSkippedType(type, "Skipped by Where clause");
                     continue;
+                }
                 // skipped because either already mapped elsewhere, or not valid for mapping            
                 if (!ShouldMap(type))
                     continue;
@@ -141,7 +146,6 @@ namespace FluentNHibernate.Automapping
 
             foreach (var type in mappingTypes)
             {
-                if (!type.Type.IsClass) continue;
                 if (type.IsMapped) continue;
 
                 AddMapping(type.Type);
@@ -199,15 +203,30 @@ namespace FluentNHibernate.Automapping
             if (includedTypes.Contains(type))
                 return true; // inclusions take precedence over everything
             if (ignoredTypes.Contains(type))
+            {
+                log.AutomappingSkippedType(type, "Skipped by IgnoreBase");
                 return false; // excluded
+            }
             if (type.IsGenericType && ignoredTypes.Contains(type.GetGenericTypeDefinition()))
+            {
+                log.AutomappingSkippedType(type, "Skipped by IgnoreBase");
                 return false; // generic definition is excluded
+            }
             if (type.IsAbstract && cfg.AbstractClassIsLayerSupertype(type))
+            {
+                log.AutomappingSkippedType(type, "Skipped by IAutomappingConfiguration.AbstractClassIsLayerSupertype(Type)");
                 return false; // is abstract and a layer supertype
+            }
             if (cfg.IsComponent(type))
+            {
+                log.AutomappingSkippedType(type, "Skipped by IAutomappingConfiguration.IsComponent(Type)");
                 return false; // skipped because we don't want to map components as entities
+            }
             if (type == typeof(object))
+            {
+                log.AutomappingSkippedType(type, "Skipped object");
                 return false; // object!
+            }
 
             return true;
         }

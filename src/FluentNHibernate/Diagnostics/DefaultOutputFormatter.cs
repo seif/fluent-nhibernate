@@ -17,7 +17,36 @@ namespace FluentNHibernate.Diagnostics
 
             OutputConventions(sb, results);
 
+            sb.AppendLine();
+
+            OutputAutomappings(sb, results);
+
             return sb.ToString();
+        }
+
+        void OutputAutomappings(StringBuilder sb, DiagnosticResults results)
+        {
+            Title(sb, "Automapping");
+
+            sb.AppendLine();
+            sb.AppendLine("Skipped types:");
+            sb.AppendLine();
+
+            var skippedTypes = results.AutomappingSkippedTypes
+                    .OrderBy(x => x.Type.Name)
+                    .ToArray();
+
+            if (skippedTypes.Any())
+            {
+                Table(sb,
+                    skippedTypes.Select(x => x.Type.Name),
+                    skippedTypes.Select(x => x.Reason),
+                    skippedTypes.Select(x => x.Type.AssemblyQualifiedName));
+            }
+            else
+            {
+                sb.AppendLine("  None found");
+            }
         }
 
         void OutputConventions(StringBuilder sb, DiagnosticResults results)
