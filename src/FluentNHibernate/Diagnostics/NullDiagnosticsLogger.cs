@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FluentNHibernate.Diagnostics
 {
@@ -20,6 +21,9 @@ namespace FluentNHibernate.Diagnostics
         {}
 
         public void AutomappingSkippedType(Type type, string reason)
+        {}
+
+        public void AutomappingCandidateTypes(IEnumerable<Type> types)
         {}
     }
 }

@@ -114,6 +114,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_not_include_a_skipped_entry_for_used_types = () =>
             results.AutomappingSkippedTypes.ShouldNotContain(typeof(Second), typeof(Third));
 
+        It should_include_all_unskipped_types_in_the_candidate_list = () =>
+            results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
+
         static AutoPersistenceModel model;
         static DiagnosticResults results;
 
@@ -153,6 +156,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         
         It should_not_include_a_skipped_entry_for_used_types = () =>
             results.AutomappingSkippedTypes.ShouldNotContain(typeof(Second), typeof(Third));
+
+        It should_include_all_unskipped_types_in_the_candidate_list = () =>
+            results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
         
         static AutoPersistenceModel model;
         static DiagnosticResults results;
@@ -186,6 +192,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_not_include_a_skipped_entry_for_used_types = () =>
             results.AutomappingSkippedTypes.ShouldNotContain(typeof(Second), typeof(Third));
 
+        It should_include_all_unskipped_types_in_the_candidate_list = () =>
+            results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
+
         static AutoPersistenceModel model;
         static DiagnosticResults results;
     }
@@ -218,6 +227,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_not_include_a_skipped_entry_for_used_types = () =>
             results.AutomappingSkippedTypes.ShouldNotContain(typeof(Second), typeof(Third));
 
+        It should_include_all_unskipped_types_in_the_candidate_list = () =>
+            results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
+
         static AutoPersistenceModel model;
         static DiagnosticResults results;
     }
@@ -248,6 +260,9 @@ namespace FluentNHibernate.Specs.Diagnostics
 
         It should_not_include_a_skipped_entry_for_used_types = () =>
             results.AutomappingSkippedTypes.ShouldNotContain(typeof(Second), typeof(Third));
+
+        It should_include_all_unskipped_types_in_the_candidate_list = () =>
+            results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
 
         static AutoPersistenceModel model;
         static DiagnosticResults results;
@@ -288,6 +303,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_not_include_a_skipped_entry_for_used_types = () =>
             results.AutomappingSkippedTypes.ShouldNotContain(typeof(Second), typeof(Third));
 
+        It should_include_all_unskipped_types_in_the_candidate_list = () =>
+            results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
+
         static AutoPersistenceModel model;
         static DiagnosticResults results;
 
@@ -326,6 +344,9 @@ namespace FluentNHibernate.Specs.Diagnostics
 
         It should_not_include_a_skipped_entry_for_used_types = () =>
             results.AutomappingSkippedTypes.ShouldNotContain(typeof(Second), typeof(Third));
+
+        It should_include_all_unskipped_types_in_the_candidate_list = () =>
+            results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
 
         static AutoPersistenceModel model;
         static DiagnosticResults results;

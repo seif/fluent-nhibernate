@@ -121,7 +121,7 @@ namespace FluentNHibernate.Testing.Diagnostics
         }
 
         [Test]
-        public void should_skipped_automap_types_to_result()
+        public void should_add_skipped_automap_types_to_result()
         {
             var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
             var logger = new DefaultDiagnosticLogger(despatcher);
@@ -144,6 +144,28 @@ namespace FluentNHibernate.Testing.Diagnostics
                     Reason = "reason"
                 });
         }
+
+        [Test]
+        public void should_add_automapping_candidates()
+        {
+            var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
+            var logger = new DefaultDiagnosticLogger(despatcher);
+
+            logger.AutomappingCandidateTypes(new[] { typeof(object) });
+            logger.Flush();
+
+            DiagnosticResults result = null;
+            despatcher.AssertWasCalled(x => x.Publish(Arg<DiagnosticResults>.Is.Anything),
+                c => c.Callback<DiagnosticResults>(x =>
+                {
+                    result = x;
+                    return true;
+                }));
+
+            result.AutomappingCandidateTypes
+                .ShouldContain(typeof(object));
+        }
+
 
         class SomeClassMap : ClassMap<SomeClass> { }
         class SomeClass {}

@@ -47,6 +47,25 @@ namespace FluentNHibernate.Diagnostics
             {
                 sb.AppendLine("  None found");
             }
+
+            sb.AppendLine();
+            sb.AppendLine("Candidate types:");
+            sb.AppendLine();
+
+            var candidateTypes = results.AutomappingCandidateTypes
+                    .OrderBy(x => x.Name)
+                    .ToArray();
+
+            if (candidateTypes.Any())
+            {
+                Table(sb,
+                    candidateTypes.Select(x => x.Name),
+                    candidateTypes.Select(x => x.AssemblyQualifiedName));
+            }
+            else
+            {
+                sb.AppendLine("  None found");
+            }
         }
 
         void OutputConventions(StringBuilder sb, DiagnosticResults results)

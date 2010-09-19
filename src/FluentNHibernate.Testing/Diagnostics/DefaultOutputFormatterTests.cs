@@ -38,7 +38,8 @@ namespace FluentNHibernate.Testing.Diagnostics
                         Type = typeof(Two),
                         Reason = "second reason"
                     },
-                });
+                },
+                new[] { typeof(Two), typeof(One) });
             var output = formatter.Format(results);
 
             output.ShouldEqual(
@@ -64,7 +65,11 @@ namespace FluentNHibernate.Testing.Diagnostics
                 "-----------\r\n\r\n" +
                 "Skipped types:\r\n\r\n" + 
                 "  " + typeof(One).Name + " | first reason  | " + typeof(One).AssemblyQualifiedName + "\r\n" +
-                "  " + typeof(Two).Name + " | second reason | " + typeof(Two).AssemblyQualifiedName + "\r\n"
+                "  " + typeof(Two).Name + " | second reason | " + typeof(Two).AssemblyQualifiedName + "\r\n" +
+                "\r\n" +
+                "Candidate types:\r\n\r\n" +
+                "  " + typeof(One).Name + " | " + typeof(One).AssemblyQualifiedName + "\r\n" +
+                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n"
             );
         }
 

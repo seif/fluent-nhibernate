@@ -144,6 +144,8 @@ namespace FluentNHibernate.Automapping
                 mappingTypes.Add(new AutoMapType(type));
             }
 
+            log.AutomappingCandidateTypes(mappingTypes.Select(x => x.Type));
+
             foreach (var type in mappingTypes)
             {
                 if (type.IsMapped) continue;

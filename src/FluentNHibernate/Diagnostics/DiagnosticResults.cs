@@ -6,17 +6,20 @@ namespace FluentNHibernate.Diagnostics
 {
     public class DiagnosticResults
     {
-        public DiagnosticResults(IEnumerable<ScannedSource> scannedSources, IEnumerable<Type> fluentMappings, IEnumerable<Type> conventions, IEnumerable<SkippedAutomappingType> automappingSkippedTypes)
+
+        public DiagnosticResults(IEnumerable<ScannedSource> scannedSources, IEnumerable<Type> fluentMappings, IEnumerable<Type> conventions, IEnumerable<SkippedAutomappingType> automappingSkippedTypes, IEnumerable<Type> automappingCandidateTypes)
         {
             FluentMappings = fluentMappings.ToArray();
             ScannedSources = scannedSources.ToArray();
             Conventions = conventions.ToArray();
             AutomappingSkippedTypes = automappingSkippedTypes.ToArray();
+            AutomappingCandidateTypes = automappingCandidateTypes.ToArray();
         }
 
         public IEnumerable<Type> FluentMappings { get; private set; }
         public IEnumerable<ScannedSource> ScannedSources { get; private set; }
         public IEnumerable<Type> Conventions { get; private set; }
         public IEnumerable<SkippedAutomappingType> AutomappingSkippedTypes { get; private set; }
+        public IEnumerable<Type> AutomappingCandidateTypes { get; private set; }
     }
 }
