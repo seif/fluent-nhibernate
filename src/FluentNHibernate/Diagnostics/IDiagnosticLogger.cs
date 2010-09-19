@@ -12,5 +12,6 @@ namespace FluentNHibernate.Diagnostics
         void LoadedConventionsFromSource(ITypeSource source);
         void AutomappingSkippedType(Type type, string reason);
         void AutomappingCandidateTypes(IEnumerable<Type> types);
+        void BeginAutomappingType(Type type);
     }
 }

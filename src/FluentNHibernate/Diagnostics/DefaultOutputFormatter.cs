@@ -61,6 +61,15 @@ namespace FluentNHibernate.Diagnostics
                 Table(sb,
                     candidateTypes.Select(x => x.Name),
                     candidateTypes.Select(x => x.AssemblyQualifiedName));
+
+                sb.AppendLine();
+                sb.AppendLine("Mapped types:");
+                sb.AppendLine();
+
+                foreach (var automappedType in results.AutomappedTypes)
+                {
+                    sb.AppendLine("  " + automappedType.Type.AssemblyQualifiedName);
+                }
             }
             else
             {

@@ -22,7 +22,7 @@ namespace FluentNHibernate.Specs.Diagnostics
 
         Because of = () =>
         {
-            model.AddMappingsFromSource(new StubTypeSource(typeof(First), typeof(FirstMap), typeof(SecondMap), typeof(ThirdMap), typeof(CompMap)));
+            model.AddMappingsFromSource(new StubTypeSource(typeof(First), typeof(FirstMap), typeof(SecondMap), typeof(ChildMap), typeof(CompMap)));
             model.BuildMappings();
         };
 
@@ -33,7 +33,7 @@ namespace FluentNHibernate.Specs.Diagnostics
             results.FluentMappings.ShouldContain(typeof(FirstMap), typeof(SecondMap));
 
         It should_register_each_SubclassMap_type_and_return_them_in_the_results = () =>
-            results.FluentMappings.ShouldContain(typeof(ThirdMap));
+            results.FluentMappings.ShouldContain(typeof(ChildMap));
 
         It should_register_each_ComponentMap_type_and_return_them_in_the_results = () =>
             results.FluentMappings.ShouldContain(typeof(CompMap));
@@ -117,6 +117,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_include_all_unskipped_types_in_the_candidate_list = () =>
             results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
 
+        It should_include_all_unskipped_types_in_the_automapped_list = () =>
+            results.AutomappedTypes.Select(x => x.Type).ShouldContainOnly(typeof(Second), typeof(Third));
+
         static AutoPersistenceModel model;
         static DiagnosticResults results;
 
@@ -159,6 +162,9 @@ namespace FluentNHibernate.Specs.Diagnostics
 
         It should_include_all_unskipped_types_in_the_candidate_list = () =>
             results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
+
+        It should_include_all_unskipped_types_in_the_automapped_list = () =>
+            results.AutomappedTypes.Select(x => x.Type).ShouldContainOnly(typeof(Second), typeof(Third));
         
         static AutoPersistenceModel model;
         static DiagnosticResults results;
@@ -195,6 +201,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_include_all_unskipped_types_in_the_candidate_list = () =>
             results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
 
+        It should_include_all_unskipped_types_in_the_automapped_list = () =>
+            results.AutomappedTypes.Select(x => x.Type).ShouldContainOnly(typeof(Second), typeof(Third));
+
         static AutoPersistenceModel model;
         static DiagnosticResults results;
     }
@@ -230,6 +239,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_include_all_unskipped_types_in_the_candidate_list = () =>
             results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
 
+        It should_include_all_unskipped_types_in_the_automapped_list = () =>
+            results.AutomappedTypes.Select(x => x.Type).ShouldContainOnly(typeof(Second), typeof(Third));
+
         static AutoPersistenceModel model;
         static DiagnosticResults results;
     }
@@ -263,6 +275,9 @@ namespace FluentNHibernate.Specs.Diagnostics
 
         It should_include_all_unskipped_types_in_the_candidate_list = () =>
             results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
+
+        It should_include_all_unskipped_types_in_the_automapped_list = () =>
+            results.AutomappedTypes.Select(x => x.Type).ShouldContainOnly(typeof(Second), typeof(Third));
 
         static AutoPersistenceModel model;
         static DiagnosticResults results;
@@ -306,6 +321,9 @@ namespace FluentNHibernate.Specs.Diagnostics
         It should_include_all_unskipped_types_in_the_candidate_list = () =>
             results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
 
+        It should_include_all_unskipped_types_in_the_automapped_list = () =>
+            results.AutomappedTypes.Select(x => x.Type).ShouldContainOnly(typeof(Second), typeof(Third));
+
         static AutoPersistenceModel model;
         static DiagnosticResults results;
 
@@ -347,6 +365,9 @@ namespace FluentNHibernate.Specs.Diagnostics
 
         It should_include_all_unskipped_types_in_the_candidate_list = () =>
             results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
+
+        It should_include_all_unskipped_types_in_the_automapped_list = () =>
+            results.AutomappedTypes.Select(x => x.Type).ShouldContainOnly(typeof(Second), typeof(Third));
 
         static AutoPersistenceModel model;
         static DiagnosticResults results;
@@ -392,9 +413,14 @@ namespace FluentNHibernate.Specs.Diagnostics
         public int Id { get; set; }
     }
 
-    class ThirdMap : SubclassMap<Third> {}
+    class Third
+    {
+        public int Id { get; set; }
+    }
 
-    class Third : Second {}
+    class ChildMap : SubclassMap<Child> {}
+
+    class Child : Second {}
 
     class CompMap : ComponentMap<Comp> {}
     class Comp {}

@@ -39,7 +39,18 @@ namespace FluentNHibernate.Testing.Diagnostics
                         Reason = "second reason"
                     },
                 },
-                new[] { typeof(Two), typeof(One) });
+                new[] { typeof(Two), typeof(One) },
+                new[]
+                {
+                    new AutomappingType
+                    {
+                        Type = typeof(One)
+                    },
+                    new AutomappingType
+                    {
+                        Type = typeof(Two)
+                    },
+                });
             var output = formatter.Format(results);
 
             output.ShouldEqual(
@@ -69,7 +80,11 @@ namespace FluentNHibernate.Testing.Diagnostics
                 "\r\n" +
                 "Candidate types:\r\n\r\n" +
                 "  " + typeof(One).Name + " | " + typeof(One).AssemblyQualifiedName + "\r\n" +
-                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n"
+                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n" +
+                "\r\n" + 
+                "Mapped types:\r\n\r\n" +
+                "  " + typeof(One).AssemblyQualifiedName + "\r\n" +
+                "  " + typeof(Two).AssemblyQualifiedName + "\r\n"
             );
         }
 

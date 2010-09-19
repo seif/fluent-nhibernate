@@ -25,5 +25,8 @@ namespace FluentNHibernate.Diagnostics
 
         public void AutomappingCandidateTypes(IEnumerable<Type> types)
         {}
+
+        public void BeginAutomappingType(Type type)
+        {}
     }
 }

@@ -179,6 +179,8 @@ namespace FluentNHibernate.Automapping
 
         private void AddMapping(Type type)
         {
+            log.BeginAutomappingType(type);
+
             Type typeToMap = GetTypeToMap(type);
             var mapping = autoMapper.Map(typeToMap, mappingTypes);
 

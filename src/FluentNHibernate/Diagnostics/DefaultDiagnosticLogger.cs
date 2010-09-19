@@ -11,6 +11,7 @@ namespace FluentNHibernate.Diagnostics
         readonly List<Type> conventions = new List<Type>();
         readonly List<SkippedAutomappingType> automappingSkippedTypes = new List<SkippedAutomappingType>();
         readonly List<Type> automappingCandidateTypes = new List<Type>();
+        readonly List<AutomappingType> automappingTypes = new List<AutomappingType>();
         bool isDirty;
 
         public DefaultDiagnosticLogger(IDiagnosticMessageDespatcher despatcher)
@@ -29,7 +30,7 @@ namespace FluentNHibernate.Diagnostics
 
         DiagnosticResults BuildResults()
         {
-            return new DiagnosticResults(scannedSources, classMaps, conventions, automappingSkippedTypes, automappingCandidateTypes);
+            return new DiagnosticResults(scannedSources, classMaps, conventions, automappingSkippedTypes, automappingCandidateTypes, automappingTypes);
         }
 
         public void FluentMappingDiscovered(Type type)
@@ -78,6 +79,15 @@ namespace FluentNHibernate.Diagnostics
         {
             isDirty = true;
             automappingCandidateTypes.AddRange(types);
+        }
+
+        public void BeginAutomappingType(Type type)
+        {
+            isDirty = true;
+            automappingTypes.Add(new AutomappingType
+            {
+                Type = type
+            });
         }
     }
 }

@@ -22,7 +22,7 @@ namespace FluentNHibernate.Testing.Diagnostics
         {
             var firstListener = Mock<IDiagnosticListener>.Create();
             var secondListener = Mock<IDiagnosticListener>.Create();
-            var results = new DiagnosticResults(new ScannedSource[0], new Type[0], new Type[0], new SkippedAutomappingType[0], new Type[0]);
+            var results = new DiagnosticResults(new ScannedSource[0], new Type[0], new Type[0], new SkippedAutomappingType[0], new Type[0], new AutomappingType[0]);
 
             despatcher.RegisterListener(firstListener);
             despatcher.RegisterListener(secondListener);

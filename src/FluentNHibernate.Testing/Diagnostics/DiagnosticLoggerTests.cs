@@ -166,6 +166,27 @@ namespace FluentNHibernate.Testing.Diagnostics
                 .ShouldContain(typeof(object));
         }
 
+        [Test]
+        public void should_add_automapping_type_with_begin()
+        {
+            var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
+            var logger = new DefaultDiagnosticLogger(despatcher);
+
+            logger.BeginAutomappingType(typeof(object));
+            logger.Flush();
+
+            DiagnosticResults result = null;
+            despatcher.AssertWasCalled(x => x.Publish(Arg<DiagnosticResults>.Is.Anything),
+                c => c.Callback<DiagnosticResults>(x =>
+                {
+                    result = x;
+                    return true;
+                }));
+
+            result.AutomappedTypes
+                .Select(x => x.Type)
+                .ShouldContain(typeof(object));
+        }
 
         class SomeClassMap : ClassMap<SomeClass> { }
         class SomeClass {}
