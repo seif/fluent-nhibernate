@@ -59,7 +59,7 @@ namespace FluentNHibernate.Testing.Diagnostics
                 "Sources scanned:\r\n\r\n" +
                 "  " + typeof(One).Assembly.GetName().FullName + "\r\n" +
                 "\r\n" +
-                "Types discovered:\r\n\r\n" +
+                "Mappings discovered:\r\n\r\n" +
                 "  " + typeof(One).Name + " | " + typeof(One).AssemblyQualifiedName + "\r\n" +
                 "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n" +
                 "\r\n" +
@@ -68,7 +68,7 @@ namespace FluentNHibernate.Testing.Diagnostics
                 "Sources scanned:\r\n\r\n" +
                 "  " + typeof(One).Assembly.GetName().FullName + "\r\n" +
                 "\r\n" +
-                "Types discovered:\r\n\r\n" +
+                "Conventions discovered:\r\n\r\n" +
                 "  " + typeof(One).Name + " | " + typeof(One).AssemblyQualifiedName + "\r\n" +
                 "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n" +
                 "\r\n" +
@@ -83,8 +83,8 @@ namespace FluentNHibernate.Testing.Diagnostics
                 "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n" +
                 "\r\n" + 
                 "Mapped types:\r\n\r\n" +
-                "  " + typeof(One).AssemblyQualifiedName + "\r\n" +
-                "  " + typeof(Two).AssemblyQualifiedName + "\r\n"
+                "  " + typeof(One).Name + " | " + typeof(One).AssemblyQualifiedName + "\r\n" +
+                "  " + typeof(Two).Name + " | " + typeof(Two).AssemblyQualifiedName + "\r\n"
             );
         }
 

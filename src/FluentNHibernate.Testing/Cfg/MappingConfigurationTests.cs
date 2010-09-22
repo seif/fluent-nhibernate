@@ -29,14 +29,14 @@ namespace FluentNHibernate.Testing.Cfg
                 .InMemory()
                 .ConfigureProperties(cfg);
 
-            mapping = new MappingConfiguration();
+            mapping = new MappingConfiguration(logger);
         }
 
         [Test]
         public void AddFromAssemblyOfAddsAnyClassMapMappingsToCfg()
         {
             mapping.FluentMappings.AddFromAssemblyOf<Record>();
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.Count.ShouldBeGreaterThan(0);
             cfg.ClassMappings.ShouldContain(c => c.MappedClass == typeof(Record));
@@ -46,7 +46,7 @@ namespace FluentNHibernate.Testing.Cfg
         public void AddFromAssemblyAddsAnyClassMapMappingsToCfg()
         {
             mapping.FluentMappings.AddFromAssembly(typeof(Record).Assembly);
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.Count.ShouldBeGreaterThan(0);
             cfg.ClassMappings.ShouldContain(c => c.MappedClass == typeof(Record));
@@ -57,7 +57,7 @@ namespace FluentNHibernate.Testing.Cfg
         {
             mapping.MergeMappings();
             mapping.FluentMappings.AddFromAssembly(typeof(Record).Assembly);
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.Count.ShouldBeGreaterThan(0);
             cfg.ClassMappings.ShouldContain(c => c.MappedClass == typeof(Record));
@@ -67,7 +67,7 @@ namespace FluentNHibernate.Testing.Cfg
         public void AddAutoMappingAddsAnyAutoMappedMappingsToCfg()
         {
             mapping.AutoMappings.Add(AutoMap.Source(new StubTypeSource(typeof(Record))));
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.Count.ShouldBeGreaterThan(0);
             cfg.ClassMappings.ShouldContain(c => c.MappedClass == typeof(Record));
@@ -78,7 +78,7 @@ namespace FluentNHibernate.Testing.Cfg
         {
             mapping.MergeMappings();
             mapping.AutoMappings.Add(AutoMap.Source(new StubTypeSource(typeof(Record))));
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.Count.ShouldBeGreaterThan(0);
             cfg.ClassMappings.ShouldContain(c => c.MappedClass == typeof(Record));
@@ -88,7 +88,7 @@ namespace FluentNHibernate.Testing.Cfg
         public void AddHbmMappingsAddsClasses()
         {
             mapping.HbmMappings.AddClasses(typeof(HbmOne), typeof(HbmTwo));
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.Count.ShouldEqual(2);
             cfg.ClassMappings.ShouldContain(c => c.MappedClass == typeof(HbmOne));
@@ -99,7 +99,7 @@ namespace FluentNHibernate.Testing.Cfg
         public void AddHbmMappingsFromAssemblyOfAddsClasses()
         {
             mapping.HbmMappings.AddFromAssemblyOf<HbmOne>();
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.Count.ShouldEqual(2);
             cfg.ClassMappings.ShouldContain(c => c.MappedClass == typeof(HbmOne));
@@ -110,7 +110,7 @@ namespace FluentNHibernate.Testing.Cfg
         public void AddHbmMappingsFromAssemblyAddsClasses()
         {
             mapping.HbmMappings.AddFromAssembly(typeof(HbmOne).Assembly);
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.Count.ShouldEqual(2);
             cfg.ClassMappings.ShouldContain(c => c.MappedClass == typeof(HbmOne));
@@ -125,7 +125,7 @@ namespace FluentNHibernate.Testing.Cfg
                 .Conventions.Add(
                     ConventionBuilder.Class.Always(x => x.Table(x.EntityType.Name + "Table"))
                 );
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.ShouldContain(c => c.Table.Name == "RecordTable");
         }
@@ -139,7 +139,7 @@ namespace FluentNHibernate.Testing.Cfg
                     ConventionBuilder.Class.Always(x => x.Table(x.EntityType.Name + "Table")),
                     ConventionBuilder.Class.Always(x => x.DynamicInsert())
                 );
-            mapping.Apply(cfg, logger);
+            mapping.Apply(cfg);
 
             cfg.ClassMappings.ShouldContain(c => c.Table.Name == "RecordTable" && c.DynamicInsert == true);
         }
@@ -197,7 +197,7 @@ namespace FluentNHibernate.Testing.Cfg
         {
             mapping.AutoMappings.Add(AutoMap.Source(new EmptySource()));
             mapping.MergeMappings();
-            mapping.Apply(new Configuration(), logger);
+            mapping.Apply(new Configuration());
             mapping.AutoMappings.First().MergeMappings.ShouldBeTrue();
         }
 
@@ -205,7 +205,7 @@ namespace FluentNHibernate.Testing.Cfg
         public void MergeOutputShouldSetFlagOnFluentPersistenceModelsOnApply()
         {
             mapping.MergeMappings();
-            mapping.Apply(new Configuration(), logger);
+            mapping.Apply(new Configuration());
             mapping.FluentMappings.PersistenceModel.MergeMappings.ShouldBeTrue();
         }
     }

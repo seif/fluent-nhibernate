@@ -336,51 +336,6 @@ namespace FluentNHibernate.Specs.Diagnostics
         }
     }
 
-    public class when_automapping_with_diagnostics_enabled_and_is_object
-    {
-        Establish context = () =>
-        {
-            var despatcher = new DefaultDiagnosticMessageDespatcher();
-            despatcher.RegisterListener(new StubListener(x => results = x));
-
-            model = AutoMap.Source(new StubTypeSource(typeof(object), typeof(Second), typeof(Third)));
-
-            model.SetLogger(new DefaultDiagnosticLogger(despatcher));
-        };
-
-        Because of = () =>
-            model.BuildMappings();
-
-        It should_produce_results_when_enabled = () =>
-            results.ShouldNotBeNull();
-
-        It should_include_a_skipped_entry_for_each_skipped_type = () =>
-            results.AutomappingSkippedTypes.Select(x => x.Type).ShouldContain(typeof(object));
-
-        It should_have_a_reason_of_skipped_by_IgnoreBase_for_each_skipped_type = () =>
-            results.AutomappingSkippedTypes.Select(x => x.Reason).ShouldContain("Skipped object");
-
-        It should_not_include_a_skipped_entry_for_used_types = () =>
-            results.AutomappingSkippedTypes.ShouldNotContain(typeof(Second), typeof(Third));
-
-        It should_include_all_unskipped_types_in_the_candidate_list = () =>
-            results.AutomappingCandidateTypes.ShouldContainOnly(typeof(Second), typeof(Third));
-
-        It should_include_all_unskipped_types_in_the_automapped_list = () =>
-            results.AutomappedTypes.Select(x => x.Type).ShouldContainOnly(typeof(Second), typeof(Third));
-
-        static AutoPersistenceModel model;
-        static DiagnosticResults results;
-
-        class TestAutomappingConfiguration : DefaultAutomappingConfiguration
-        {
-            public override bool AbstractClassIsLayerSupertype(Type type)
-            {
-                return type == typeof(Abstract);
-            }
-        }
-    }
-
     abstract class Abstract
     {}
 

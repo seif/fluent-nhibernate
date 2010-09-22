@@ -13,6 +13,16 @@ namespace FluentNHibernate.Diagnostics
             this.setLogger = setLogger;
         }
 
+        public DiagnosticsConfiguration Enable(bool enable)
+        {
+            if (enable)
+                Enable();
+            else
+                Disable();
+
+            return this;
+        }
+
         public DiagnosticsConfiguration Enable()
         {
             setLogger(new DefaultDiagnosticLogger(despatcher));
@@ -34,6 +44,24 @@ namespace FluentNHibernate.Diagnostics
         public DiagnosticsConfiguration OutputToConsole()
         {
             RegisterListener(new ConsoleOutputListener());
+            return this;
+        }
+
+        public DiagnosticsConfiguration OutputToConsole(IDiagnosticResultsFormatter formatter)
+        {
+            RegisterListener(new ConsoleOutputListener(formatter));
+            return this;
+        }
+
+        public DiagnosticsConfiguration OutputToFile(string path)
+        {
+            RegisterListener(new FileOutputListener(path));
+            return this;
+        }
+
+        public DiagnosticsConfiguration OutputToFile(IDiagnosticResultsFormatter formatter, string path)
+        {
+            RegisterListener(new FileOutputListener(formatter, path));
             return this;
         }
     }

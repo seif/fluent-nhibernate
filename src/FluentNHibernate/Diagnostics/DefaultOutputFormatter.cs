@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -66,9 +65,18 @@ namespace FluentNHibernate.Diagnostics
                 sb.AppendLine("Mapped types:");
                 sb.AppendLine();
 
-                foreach (var automappedType in results.AutomappedTypes)
+                var automappedTypes = results.AutomappedTypes
+                    .Select(x => x.Type);
+
+                if (automappedTypes.Any())
                 {
-                    sb.AppendLine("  " + automappedType.Type.AssemblyQualifiedName);
+                    Table(sb,
+                       automappedTypes.Select(x => x.Name),
+                       automappedTypes.Select(x => x.AssemblyQualifiedName));   
+                }
+                else
+                {
+                    sb.AppendLine("  None found");
                 }
             }
             else
@@ -96,7 +104,7 @@ namespace FluentNHibernate.Diagnostics
                 List(sb, sources);
 
                 sb.AppendLine();
-                sb.AppendLine("Types discovered:");
+                sb.AppendLine("Conventions discovered:");
                 sb.AppendLine();
 
                 if (results.Conventions.Any())
@@ -139,7 +147,7 @@ namespace FluentNHibernate.Diagnostics
                 List(sb, sources);
 
                 sb.AppendLine();
-                sb.AppendLine("Types discovered:");
+                sb.AppendLine("Mappings discovered:");
                 sb.AppendLine();
 
                 if (results.FluentMappings.Any())

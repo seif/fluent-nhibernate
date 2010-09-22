@@ -52,5 +52,16 @@ namespace FluentNHibernate.Testing.Diagnostics
 
             despatcher.AssertWasCalled(x => x.RegisterListener(Arg<ConsoleOutputListener>.Is.TypeOf));
         }
+
+        [Test]
+        public void output_to_file_should_register_console_listener()
+        {
+            var despatcher = Mock<IDiagnosticMessageDespatcher>.Create();
+
+            new DiagnosticsConfiguration(despatcher, l => { })
+                .OutputToFile("path");
+
+            despatcher.AssertWasCalled(x => x.RegisterListener(Arg<FileOutputListener>.Is.TypeOf));
+        }
     }
 }

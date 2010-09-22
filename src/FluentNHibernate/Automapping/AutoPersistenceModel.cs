@@ -227,10 +227,7 @@ namespace FluentNHibernate.Automapping
                 return false; // skipped because we don't want to map components as entities
             }
             if (type == typeof(object))
-            {
-                log.AutomappingSkippedType(type, "Skipped object");
                 return false; // object!
-            }
 
             return true;
         }
